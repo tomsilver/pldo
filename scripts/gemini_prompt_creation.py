@@ -3,7 +3,8 @@
 Example usage:
     python scripts/gemini_prompt_creation.py \
         --init_prompt "clickshare" \
-        --ref_folder 'tests/pldo1/assets/clickshare/train'
+        --ref_folder "tests/pldo1/assets/clickshare/train" \
+        --eval_folder "tests/pldo1/assets/clickshare/validation"
 """
 
 from pathlib import Path
@@ -13,6 +14,7 @@ import numpy as np
 
 from pldo.prompt_generation.gemini_prompt_generator import GeminiPromptGenerator
 from pldo.prompt_scoring.gemini_prompt_scorer import GeminiPromptScorer
+from pldo.prompt_scoring.utils import score_prompts
 
 
 def _main(
@@ -45,58 +47,16 @@ def _main(
     for i, prompt in enumerate(outputs):
         print(f"[{i}] {prompt}")
 
-    scored_prompts = []
-    for prompt in outputs:
-        pos_scores = []
-        neg_scores = []
-
-        TP = FP = FN = TN = 0  # Initialize counters
-
-        # Evaluate on positive images (ground truth = positive)
-        for img in eval_pos_images:
-            score = prompt_scorer.score(img, prompt, negative=False)
-            pos_scores.append(score)
-
-            if score == 1:
-                TP += 1
-            else:
-                FN += 1
-
-        # Evaluate on negative images (ground truth = negative)
-        for img in eval_neg_images:
-            score = prompt_scorer.score(img, prompt, negative=True)
-            neg_scores.append(score)
-
-            if score == 1:
-                TN += 1
-            else:
-                FP += 1
-
-        final_score = sum(pos_scores) + sum(neg_scores)
-
-        scored_prompts.append(
-            {
-                "prompt": prompt,
-                "final_score": final_score,
-                "TP": TP,
-                "FP": FP,
-                "FN": FN,
-                "TN": TN,
-            }
-        )
+    scored_prompts = score_prompts(
+        outputs, eval_pos_images, eval_neg_images, prompt_scorer
+    )
 
     # Sort prompts by final_score descending
-    ranked_prompts = sorted(
-        scored_prompts, key=lambda x: x["final_score"], reverse=True  # type: ignore
-    )
+    ranked_prompts = sorted(scored_prompts, key=lambda x: x.accuracy, reverse=True)
 
     print("\nRanked Prompts:")
     for i, entry in enumerate(ranked_prompts):
-        print(f"{i+1}. Score: {entry['final_score']} | Prompt: {entry['prompt']}")
-        print(
-            f"    TP: {entry['TP']} | FP: {entry['FP']} | "
-            f"FN: {entry['FN']} | TN: {entry['TN']}"
-        )
+        print(f"{i+1} {entry.get_table_str()}")
 
 
 if __name__ == "__main__":
