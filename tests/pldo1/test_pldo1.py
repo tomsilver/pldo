@@ -7,11 +7,11 @@ from pldo.prompt_scoring.gemini_prompt_scorer import GeminiPromptScorer
 
 def test_gemini_generator_creation():
     """Test creating a GeminiPromptGenerator."""
-    gen = GeminiPromptGenerator(initial_prompt="object", test=True)
+    gen = GeminiPromptGenerator(initial_prompt="object", use_cache_only=True)
     assert gen.initial_prompt == "object"
 
 
 def test_gemini_scorer_creation():
     """Test creating a GeminiPromptScorer."""
-    sco = GeminiPromptScorer(test=True)
+    sco = GeminiPromptScorer(use_cache_only=True)
     assert isinstance(sco, PromptScorer)

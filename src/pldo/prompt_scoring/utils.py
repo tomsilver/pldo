@@ -6,6 +6,11 @@ from prpl_perception_utils.structs import RGBImage
 
 from pldo.prompt_scoring.base_prompt_scorer import PromptScorer
 
+# Constants for terminal colors
+GREEN = "\033[92m"
+RED = "\033[91m"
+RESET = "\033[0m"
+
 
 @dataclass(frozen=True)
 class ScoredPrompt:
@@ -20,7 +25,13 @@ class ScoredPrompt:
     def get_table_str(self) -> str:
         """Get a nice table of the confusion matrix and accuracy and prompt."""
         s = f"Accuracy: {self.accuracy} | Prompt: {self.prompt}\n"
-        s += f"    TP: {self.tp} | FP: {self.fp} | FN: {self.fn} | TN: {self.tn}"
+        s += (
+            f"    TP: {GREEN}{self.tp}{RESET} | "
+            f"FP: {RED}{self.fp}{RESET} | "
+            f"FN: {RED}{self.fn}{RESET} | "
+            f"TN: {GREEN}{self.tn}{RESET}"
+        )
+
         return s
 
     @property

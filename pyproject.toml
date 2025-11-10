@@ -11,7 +11,8 @@ requires-python = ">=3.10"
 dependencies = [
    "matplotlib",
    "numpy",
-   "prpl_perception_utils@git+https://github.com/Princeton-Robot-Planning-and-Learning/prpl-mono.git#subdirectory=prpl-perception-utils"
+   "prpl_perception_utils@git+https://github.com/Princeton-Robot-Planning-and-Learning/prpl-mono.git#subdirectory=prpl-perception-utils",
+   "prpl_llm_utils@git+https://github.com/Princeton-Robot-Planning-and-Learning/prpl-mono.git#subdirectory=prpl-llm-utils"
 ]
 
 [project.optional-dependencies]

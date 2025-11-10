@@ -11,4 +11,4 @@ class PromptSearchDataset:
 
     train_rgbs: list[RGBImage]  # used for prompt generation
     val_positive_rgbs: list[RGBImage]  # positive images of the object
-    val_negative_rbgs: list[RGBImage]  # negative images of the object
+    val_negative_rgbs: list[RGBImage]  # negative images of the object
