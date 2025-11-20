@@ -1,4 +1,4 @@
-"""Base class for prompt generators."""
+"""Base class for prompt scorers."""
 
 import abc
 
@@ -9,5 +9,5 @@ class PromptScorer(abc.ABC):
     """Base class for image-to-text prompt scorers."""
 
     @abc.abstractmethod
-    def score(self, rgb: RGBImage, prompt: str, negative: bool) -> int:
+    def score(self, rgb: RGBImage, gen_prompt: str, negative: bool) -> int:
         """Score several unique candidate prompts based on detection of an object."""
